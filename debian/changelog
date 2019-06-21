@@ -1,3 +1,9 @@
+yubikey-luks (0.5.2-1ubuntu2) trusty; urgency=low
+
+  * Fix wrong Yubikey slot in keyscript
+
+ -- Thuan Duong <thuandt26@gmail.com>  Fri, 21 Jun 2019 15:32:32 +0700
+
 yubikey-luks (0.5.2-1ubuntu1) trusty; urgency=low
 
   * Allow configure Yubikey slot number for challenge response
