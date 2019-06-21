@@ -15,18 +15,28 @@ fi
 while getopts ":s:d:hcv" opt; do
   case $opt in
 	s)
-		SLOT=$OPTARG
-		echo "setting slot to $OPTARG."
+		if [ "$OPTARG" -gt -1 ] && [ "$OPTARG" -lt 8 ]; then
+			SLOT=$OPTARG
+			echo "Setting slot to $OPTARG."
+		else
+			echo "Invalid slot specified, choose one slot between 0 and 7 or omit this option to choose the default ($SLOT)"
+			exit 3
+		fi
 		;;
 	d)
-		DISK=$OPTARG
-		echo "setting disk to $OPTARG."
+		if [ -b "$OPTARG" ]; then #Check it's a block device
+			DISK=$OPTARG
+			echo "Setting disk to $OPTARG."
+		else
+			echo "$OPTARG is not a block device!"
+			exit 4
+		fi
 		;;
 	c)  CLEAR_SLOT=1
-		echo "clearing slot"
+		echo "Clearing slot"
 		;;
 	v)  DBG=1
-		echo "debugging enabled"
+		echo "Debugging enabled"
 		;;
 	h)
 		echo
@@ -48,6 +58,12 @@ echo "This script will utilize slot $SLOT on drive $DISK.  If this is not what y
 if [ "$CLEAR_SLOT" = "1" ]; then
 	echo "Killing LUKS slot $SLOT"
 	cryptsetup luksKillSlot "$DISK" "$SLOT"
+else
+	SLOT_STATUS=$(cryptsetup luksDump "$DISK" | grep "Key Slot $SLOT" | awk '{print $4}')
+	if [ "$SLOT_STATUS" != 'DISABLED' ]; then
+		echo "Slot $SLOT is occupied and -c is not specified! Clear this slot before attempting to set a new key."
+		exit 2
+	fi
 fi
 
 echo "Adding yubikey to initrd"
