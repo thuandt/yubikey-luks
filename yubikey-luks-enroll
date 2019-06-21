@@ -29,7 +29,7 @@ while getopts ":s:d:hcv" opt; do
 		echo "debugging enabled"
 		;;
 	h)
-		echo 
+		echo
 		echo " -d <partition>: set the partition"
 		echo " -s <slot>     : set the slot"
 		echo " -c            : clear the slot prior to writing"
@@ -74,7 +74,7 @@ if [ "$HASH" = "1" ]; then
 		if [ "$DBG" = "1" ]; then echo "Password hash: $P1"; fi
 fi
 
-R="$(ykchalresp -2 "$P1" 2>/dev/null || true)"
+R="$(ykchalresp "-$YUBIKEY_SLOT" "$P1" 2>/dev/null || true)"
 	if [ "$DBG" = "1" ]; then echo "Yubikey response: $R"; fi
 
 if [ -z "$R" ]; then
