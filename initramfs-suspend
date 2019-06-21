@@ -32,7 +32,7 @@ echo mem > /sys/power/state
 . /etc/ykluks.cfg
 
 [ -z "${cryptname}" ] ||
-    while true; do
+	while true; do
 	P1=$(/lib/cryptsetup/askpass "$WELCOME_TEXT")
 
 	if [ "$HASH" = "1" ]; then
@@ -46,10 +46,9 @@ echo mem > /sys/power/state
 	else
 		printf %s "$R" | cryptsetup luksResume "${cryptname}" 2>&1;
 	fi
-
-        [ $? -le 1 ] && break
-        sleep 2
-    done
+		[ $? -le 1 ] && break
+		sleep 2
+	done
 
 # Stop udev from initramfs, as the real daemon from rootfs will be restarted
 udevadm control --exit

@@ -53,9 +53,9 @@ fi
 echo "Adding yubikey to initrd"
 
 while true ; do
-    if lsusb | grep -iq 'yubico'; then break; fi
-    printf "Please insert a yubikey and press enter."
-    read -r _ <&1
+	if lsusb | grep -iq 'yubico'; then break; fi
+	printf "Please insert a yubikey and press enter."
+	read -r _ <&1
 done
 
 P1=$(/lib/cryptsetup/askpass "Please enter the yubikey challenge password. This is the password that will only work while your yubikey is installed in your computer:")
@@ -78,8 +78,8 @@ R="$(ykchalresp "-$YUBIKEY_SLOT" "$P1" 2>/dev/null || true)"
 	if [ "$DBG" = "1" ]; then echo "Yubikey response: $R"; fi
 
 if [ -z "$R" ]; then
-    echo "Yubikey not available or timed out waiting for button press"
-    exit 1
+	echo "Yubikey not available or timed out waiting for button press"
+	exit 1
 fi
 
 OLD=$(/lib/cryptsetup/askpass "Please provide an existing passphrase. This is NOT the passphrase you just entered, this is the passphrase that you currently use to unlock your LUKS encrypted drive:")

@@ -37,9 +37,9 @@ done
 echo "This script will try opening $NAME LUKS container on drive $DISK . If this is not what you intended, exit now!"
 
 while true ; do
-    if lsusb | grep -iq 'yubico'; then break; fi
-    printf "Please insert a yubikey and press enter."
-    read -r _ <&1
+	if lsusb | grep -iq 'yubico'; then break; fi
+	printf "Please insert a yubikey and press enter."
+	read -r _ <&1
 done
 
 P1=$(/lib/cryptsetup/askpass "Enter password created with yubikey-luks-enroll:")
@@ -54,8 +54,8 @@ R="$(ykchalresp "-$YUBIKEY_SLOT" "$P1" 2>/dev/null || true)"
 	if [ "$DBG" = "1" ]; then echo "Yubikey response: $R"; fi
 
 if [ -z "$R" ]; then
-    echo "Yubikey not available or timed out waiting for button press"
-    exit 1
+	echo "Yubikey not available or timed out waiting for button press"
+	exit 1
 fi
 
 _passphrase=''
@@ -81,9 +81,9 @@ else
 	# newline) and concatenates everything in a variable and adds a newline.
 	expect_script=''
 	OLDIFS="$IFS"
-    while IFS="${_n}" read -r line; do
-        expect_script="$expect_script$line${_n}"
-    done <<EXPECTSCRIPT
+	while IFS="${_n}" read -r line; do
+		expect_script="$expect_script$line${_n}"
+	done <<EXPECTSCRIPT
 		set timeout -1;
 		spawn udisksctl unlock -b "$DISK";
 		match_max 100000;
