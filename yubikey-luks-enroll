@@ -109,4 +109,17 @@ else
 		if [ "$DBG" = "1" ]; then echo "LUKS key: $R"; fi
 fi
 
+# add keyscript to /etc/crypttab
+if [ -b "${DISK}" ]
+then
+   echo "${DISK} searching from disk/by-uuid"
+   UUID="$( blkid -s UUID -o value "$DISK" )"
+fi
+
+if ! grep 'keyscript=/usr/share/yubikey-luks/ykluks-keyscript' /etc/crypttab
+then
+   sed -i "/${UUID}/ s/$/,keyscript=\/usr\/share\/yubikey-luks\/ykluks-keyscript/" /etc/crypttab
+   update-initramfs -u
+fi
+
 exit 0
